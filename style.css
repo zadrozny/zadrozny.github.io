@@ -1,0 +1,77 @@
+body {
+	margin: 0 auto;
+}
+
+li {
+	list-style-type: none;
+	padding-right: 2em;
+}
+
+a {
+	text-decoration: none;
+	color: whitesmoke;
+}
+
+nav {
+	margin: 0 auto;
+	display: flex;
+	background: black;
+	font-size: 2em;
+	height: 10vh;
+	color: whitesmoke;
+}
+
+#navbar-left {
+	display: flex;
+}
+
+#fullscreen-icon {
+	position: absolute;
+	right: 1em;
+}
+
+#mapid {
+    width: 100vw; 
+    height: 90vh;
+}
+
+
+#street-name {
+    z-index: 1001;
+    position: absolute; 
+    top: 5%;
+    left: 50%;
+    display: flex;
+    transform: translate(-50%, 0%);
+    background: black;
+    font-size: 3em;
+    color: whitesmoke;
+    padding: 10px;
+	/*Use 401 to be between map and controls*/
+	/*Use 1001 to be atop map and controls*/
+}
+
+
+.btn-group {
+    z-index: 1001;
+    position: absolute; 
+    bottom: 5%;
+    left: 50%;
+    display: flex;
+    transform: translate(-50%, 0%);
+	/*Use 401 to be between map and controls*/
+	/*Use 1001 to be atop map and controls*/
+}
+
+
+#allbus {
+    margin: 30px;
+    padding: 30px;
+    background: black;
+    color: white;
+    font-size: 3em;
+    border-radius: 25%;
+    box-shadow: 1px 1px rgba(0,0,0,0.5);
+}
+
+
