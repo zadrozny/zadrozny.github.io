@@ -47,6 +47,8 @@ nav {
     font-size: 3em;
     color: whitesmoke;
     padding: 10px;
+    border-radius: 5%;
+    box-shadow: 1px 1px rgba(0,0,0,0.5);    
 	/*Use 401 to be between map and controls*/
 	/*Use 1001 to be atop map and controls*/
 }
