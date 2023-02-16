@@ -22,11 +22,18 @@
         <nav>        	
             <ul id="navbar-left">
                 <li><i class="fa-solid fa-bars"></i></li>
+                <!-- STATE -->
+                <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('city')">CITY</a></li>
                 <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('boro')">BOROS</a></li>
                 <!-- <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('hoods')">HOODS</a></li> -->
                 <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('street')">STREETS</a></li>
 <!--                 <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('bors')">BLOCKS</a></li> -->
 <!--                 <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('bors')">BUILDINGS</a></li> -->
+<!-- LANDMARKS -->
+
+
+<!-- donate -->
+<!-- about -->
             </ul>
             <ul id="navbar-right">
                 <li><a href="javascript:void(0)" class="menu" id="menu-screen"><span class="tooltiptext"><i id="fullscreen-icon" class="fa-solid fa-expand"></i></span></a></li>
@@ -42,9 +49,10 @@
         </div>
     </div>
 
-
-<script type="text/javascript" src="dcm_streets_brooklyn_2023_02.js"></script>
+<!-- <script type="text/javascript" src="inverse.js"></script> -->
+<script type="text/javascript" src="NYC_boundaries_with_water.js"></script>
 <script type="text/javascript" src="boroughs.js"></script>
+<script type="text/javascript" src="dcm_streets_brooklyn_2023_02.js"></script>
 
 <script>
 
@@ -55,12 +63,13 @@
 	//     .then(res => res.json())
 	//     .then(data => {features = data.features})
 
-	let mode = "boro";
+	let mode = "city"; // "boro";
 
 	let boros = boroughs; // `boroughs` in boroughs.js
 	let streets = roads;
 
-	let modes = {"boro": {"data": boros, "featureName": "boro_name"},
+	let modes = {"city": {"data": NYC, "featureName": "feature"},
+	             "boro": {"data": boros, "featureName": "boro_name"},
                  "street": {"data": streets, "featureName": "Street_NM"}};
 
 	let features = ""; 
@@ -117,7 +126,7 @@
         changeFeature(0)
 	};
 
-    changeMode("boro");
+    changeMode("city");
 
 
 	// KEYBOARD CONTROLS FOR LAPTOP USE
