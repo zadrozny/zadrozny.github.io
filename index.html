@@ -25,7 +25,7 @@
                 <!-- STATE -->
                 <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('city')">CITY</a></li>
                 <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('boro')">BOROS</a></li>
-                <!-- <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('hoods')">HOODS</a></li> -->
+                <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('hood')">HOODS</a></li>
                 <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('street')">STREETS</a></li>
 <!--                 <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('bors')">BLOCKS</a></li> -->
 <!--                 <li><a href="javascript:void(0)" class="menu" id="menu-space" onclick="changeMode('bors')">BUILDINGS</a></li> -->
@@ -52,7 +52,9 @@
 <!-- <script type="text/javascript" src="inverse.js"></script> -->
 <script type="text/javascript" src="NYC_boundaries_with_water.js"></script>
 <script type="text/javascript" src="boroughs.js"></script>
+<script type="text/javascript" src="Wikidata_neighborhoods.js"></script>
 <script type="text/javascript" src="dcm_streets_brooklyn_2023_02.js"></script>
+
 
 <script>
 
@@ -66,10 +68,12 @@
 	let mode = "city"; // "boro";
 
 	let boros = boroughs; // `boroughs` in boroughs.js
+	let hoods = neighborhoods;
 	let streets = roads;
 
 	let modes = {"city": {"data": NYC, "featureName": "feature"},
 	             "boro": {"data": boros, "featureName": "boro_name"},
+	             "hood": {"data": hoods, "featureName": "Name"},
                  "street": {"data": streets, "featureName": "Street_NM"}};
 
 	let features = ""; 
