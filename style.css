@@ -1,5 +1,6 @@
 body {
 	margin: 0 auto;
+    color: whitesmoke;
 }
 
 li {
@@ -9,7 +10,6 @@ li {
 
 a {
 	text-decoration: none;
-	color: whitesmoke;
 }
 
 nav {
@@ -18,7 +18,6 @@ nav {
 	background: black;
 	font-size: 2em;
 	height: 10vh;
-	color: whitesmoke;
 }
 
 #navbar-left {
@@ -46,7 +45,6 @@ nav {
     transform: translate(-50%, 0%);
     background: black;
     font-size: 3em;
-    color: whitesmoke;
     padding: 10px;
     border-radius: 5%;
     box-shadow: 1px 1px rgba(0,0,0,0.5);    
@@ -71,10 +69,10 @@ nav {
     margin: 30px;
     padding: 30px;
     background: black;
-    color: whitesmoke;
     font-size: 3em;
     border-radius: 25%;
     box-shadow: 1px 1px rgba(0,0,0,0.5);
+    color: whitesmoke;
 }
 
 
@@ -117,6 +115,7 @@ nav {
   color: #818181;
   display: block;
   transition: 0.3s;
+  display: inline;
 }
 
 .sidebar a:hover {
@@ -157,4 +156,30 @@ nav {
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
   .sidebar a {font-size: 18px;}
+}
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
+details {
+    /*border: 1px solid #aaa;*/
+    /*border-radius: 4px;*/
+    padding: 0.5em 0.5em 0;
+}
+
+summary {
+    /*font-weight: bold;*/
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+    /*list-style: none;*/
+}
+
+details[open] {
+    padding: 0.5em;
+}
+
+details[open] summary {
+    /*border-bottom: 1px solid #aaa;*/
+    margin-bottom: 0.5em;
 }
