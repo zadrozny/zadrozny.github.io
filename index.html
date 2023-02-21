@@ -5,6 +5,7 @@
 	<title>New York Explorer</title>
 
 	<meta charset="utf-8" />
+
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
@@ -20,24 +21,25 @@
 <body>
 
 	<div id="theSidebar" class="sidebar">
-		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-			<details>
-			<summary><a href="javascript:void(0)" class="menu" id="city" onclick="changeFeature('city', 0)">NEW YORK CITY</a></summary>
+		<a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">×</a>
+
+			<details id="details-city">
+			<summary><a href="javascript:void(0)" class="menu" id="city" onclick="changeFeature(0, 'city', 0)">NEW YORK CITY</a></summary>
                 <ul id="sidebar-city"></ul>
 			</details>
 
-            <details>
-            <summary><a href="javascript:void(0)" class="menu" id="boroughs" onclick="changeFeature('boroughs', 0)">BOROUGHS</a></summary>
+            <details id="details-boroughs">
+            <summary><a href="javascript:void(0)" class="menu" id="boroughs" onclick="changeFeature(0, 'boroughs', 0)">BOROUGHS</a></summary>
                 <ul id="sidebar-boroughs"></ul>
 			</details>
 
-			<details>
-				<summary><a href="javascript:void(0)" class="menu" id="neighborhoods" onclick="changeFeature('neighborhoods', 0)">NEIGHBORHOODS</a></summary>
+			<details id="details-neighborhoods">
+				<summary><a href="javascript:void(0)" class="menu" id="neighborhoods" onclick="changeFeature(0, 'neighborhoods', 0)">NEIGHBORHOODS</a></summary>
 				<ul id="sidebar-neighborhoods"></ul>
 			</details>
 
-			<details>
-				<summary><a href="javascript:void(0)" class="menu" id="streets" onclick="changeFeature('streets', 0)">STREETS</a></summary>
+			<details id="details-streets">
+				<summary><a href="javascript:void(0)" class="menu" id="streets" onclick="changeFeature(0, 'streets', 0)">STREETS</a></summary>
 				<ul id="sidebar-streets"></ul>
 			</details>
 
@@ -52,7 +54,8 @@
 	    <header>
 	        <nav>        	
 	            <ul id="navbar-left">
-	                <li><a href="javascript:void(0)" class="menu" onclick="openNav()"><i class="fa-solid fa-bars"></i></a></li>
+	                <li><a href="javascript:void(0)" class="menu" onclick="openSidebar()">
+	                	<i class="fa-solid fa-bars" id="hamburger"></i></a></li>
 	                <!-- NEW YORK STATE -->
 	                <li><a href="javascript:void(0)" id="state"></a></li>
 <!-- 	                <li><a href="javascript:void(0)" class="menu" id="city" onclick="changeFeature('city')">CITY</a></li>
@@ -67,7 +70,7 @@
 					<!-- ABOUT -->
 	            </ul>
 	            <ul id="navbar-right">
-	                <li><a href="javascript:void(0)" class="menu" id="menu-screen"><span class="tooltiptext"><i id="fullscreen-icon" class="fa-solid fa-expand"></i></span></a></li>
+	                <li><a href="javascript:void(0)" class="menu" id="menu-screen" onclick="toggleFullScreen()"><span class="tooltiptext"><i id="fullscreen-icon" class="fa-solid fa-expand"></i></span></a></li>
 	            </ul>
 	        </nav>
 	    </header>
@@ -75,8 +78,8 @@
 	    <div id="mapid">
 	    	<div id="feature-name"></div>
 	        <div class="btn-group"> 
-	            <button type="buttons" id="allbus" class="btn btn-success" onclick="clickButton(-1)"><</button>
-	            <button type="buttons" id="allbus" class="btn btn-success" onclick="clickButton(1)">></button>
+	            <button type="buttons" id="allbus" class="btn btn-success" onclick="changeFeature(-1)"><</button>
+	            <button type="buttons" id="allbus" class="btn btn-success" onclick="changeFeature(1)">></button>
 	        </div>
 	    </div>
 	</div>
@@ -84,17 +87,17 @@
 
 
     <!-- <script type="text/javascript" src="inverse.js"></script> -->
-    <script type="text/javascript" src="data/NYC_boundaries_with_water.js"></script>
-    <script type="text/javascript" src="data/boroughs.js"></script>
-    <script type="text/javascript" src="data/Wikidata_neighborhoods.js"></script>
-    <script type="text/javascript" src="data/dcm_streets_brooklyn_2023_02.js"></script>
+
+    <!-- Import data -->
+    <script type="text/javascript" src="data/data_city.js"></script>
+    <script type="text/javascript" src="data/data_boroughs.js"></script>
+    <script type="text/javascript" src="data/data_neighborhoods.js"></script>
+    <script type="text/javascript" src="data/data_streets.js"></script>
 
 
     <script>
 
-	const get = element => document.getElementById(element);
-
-	var nycmap = L.map('mapid').setView([40.66, -73.95], 16);
+	let NYCMAP = L.map('mapid').setView([40.66, -73.95], 16);
 
 	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 		maxZoom: 18,
@@ -104,100 +107,107 @@
 		id: 'mapbox/streets-v11',
 		tileSize: 512,
 		zoomOffset: -1
-	}).addTo(nycmap);
+	}).addTo(NYCMAP);
 
 
-	let boros = boroughs; // `boroughs` in boroughs.js
-	let hoods = neighborhoods;
-	let streets = roads;
-
-	let modes = {"city": {"data": NYC, "featureName": "feature"},
-	             "boroughs": {"data": boros, "featureName": "boro_name"},
-	             "neighborhoods": {"data": hoods, "featureName": "Name"},
+    // --------------------------------  GLOBALS   -------------------------------- //
+	let MODES = {"city": {"data": city, "featureName": "name"},
+	             "boroughs": {"data": boroughs, "featureName": "boro_name"},
+	             "neighborhoods": {"data": neighborhoods, "featureName": "Name"},
                  "streets": {"data": streets, "featureName": "Street_NM"}};
-    
-    // console.log(modes[currentMode])
 
-    let modeList = Object.keys(modes)
+    let MODE_LIST = Object.keys(MODES)
+	let MODE = "city"; // Default, starting mode
 
-	let features = ""; 
+	let DATA = "";
 
-	// let mapIdObj = {};
+	let FEATURE_INDEX = 0;
+	let FEATURE = ""; // DATA[ FEATURE_INDEX ]
+	// let FEATURE_GEO = "";
 
+	let LAYER = ""; // Geo layer that must be available globally to clear map on feature change
 
-	let currentMode = "city";
-	let featureIndex = 0;
-
-	let currentFeature = "";
-	let currentFeatureGeo = "";
-	let currentLayer = "";
+    // --------------------------------  /GLOBALS   ------------------------------- //
 
 
-function clickButton(n) {
-	featureIndex += n;
-	m = currentMode;
-	changeFeature(m, featureIndex)
-}
+	const get = element => document.getElementById(element);
 
 
-
-	function changeFeature(mode, index) {
+	function changeFeature(page=0, mode="", index="") {
 		// Function employed when clicking on link in sidebar, keyboard prev/next arrow, screen prev/next button
 
+		console.log(page, mode, index);
+
 	    // Remove any map markers
-	    if (currentLayer != "") {
-	        currentLayer.clearLayers(); 
+	    if (LAYER != "") {
+	        LAYER.clearLayers(); 
 	    };
 
-	    // console.log("This is the mode inside changeFeature: " + mode + "Its type is: " + typeof mode)
-		features = modes[mode]["data"].features
-	    currentFeature = features[index];
+        if ( mode != "") {
+        	MODE = mode;
+        }
 
-	    if (typeof(currentFeature) == "undefined") {
-	    	let nextMode = modeList.indexOf(mode) + 1
-	    	currentMode = modeList[nextMode]
-	    	featureIndex = 0
-	    	changeFeature(currentMode, featureIndex)
-	    	return
+
+	    if (page != 0) {
+	    	FEATURE_INDEX += page; // -1 is previous; 1 is next
+	    } else { // For use with sidebar index links:
+	    	FEATURE_INDEX = index;
+	    	DATA = MODES[mode]["data"].features;
+	    }
+
+	    // console.log("This is the mode inside changeFeature: " + mode + "Its type is: " + typeof mode)
+
+        if (FEATURE_INDEX === -1) { // The user has been pressing the back button or back arrow
+        	if (MODE_LIST.indexOf(MODE) != 0) {
+                MODE = MODE_LIST[ MODE_LIST.indexOf(MODE) - 1 ]
+        	} else {
+                MODE = MODE_LIST[0]
+        	}
+        	DATA = MODES[MODE]["data"].features;
+            FEATURE_INDEX = DATA.length - 1
+        }
+		
+	    FEATURE = DATA[FEATURE_INDEX];
+
+		// The index exceeds the data, time for next mode	    
+	    if (typeof(FEATURE) == "undefined") {
+	    	if (MODE_LIST.indexOf(MODE) != (MODE_LIST.length - 1)) {
+                MODE = MODE_LIST[ MODE_LIST.indexOf(MODE) + 1 ];  // next mode
+                FEATURE_INDEX = 0;
+                changeFeature(0, MODE, FEATURE_INDEX)
+                return
+	    	} else {
+	    		alert("No more features!");
+	    		return;
+	    	}
 	    }
         
-        let name = modes[mode]["featureName"];
-        get("feature-name").innerHTML = currentFeature.properties[name]; 
-		currentFeatureGeo = L.geoJSON(currentFeature);
-		currentLayer = currentFeatureGeo.addTo(nycmap);
-		
-		let bounds = currentFeatureGeo.getBounds();
-		nycmap.fitBounds(bounds);
+        get( MODE.toLowerCase() + "-" + FEATURE_INDEX.toString() ).style.color = "red"; // Highlights index entry as "visited"
+
+        let featureName = MODES[MODE]["featureName"];
+        get("feature-name").innerHTML = FEATURE.properties[featureName]; 
+		let featureGeo = L.geoJSON(FEATURE);
+		LAYER = featureGeo.addTo(NYCMAP); // Variable allos us to clear map when feature changes
+		let bounds = featureGeo.getBounds();
+		NYCMAP.fitBounds( bounds );
 		
 		let center = bounds.getCenter();
 		let lat = center.lat;
 		let long = center.lng;
-		nycmap.panTo(new L.LatLng(lat, long));
+		NYCMAP.panTo(new L.LatLng(lat, long));
 	};
 
-	// function changeMode(currentMode, i=0) {
- //        // mode = m;
- //        features = modes[currentMode]["data"].features; // `streets` in dcm_streets_brooklyn_2023_02.js
- //        changeFeature(i)
-	// 	const menu = document.getElementsByClassName("menu")
-	// 	Array.prototype.map.call(menu, function(e) {
- // 			e.style.color="whitesmoke";
-	// 		e.style.fontWeight="normal";}
-	// 		)
- //        get(currentMode).style.color = "red";
- //        get("state").innerHTML = mode.toUpperCase();
-	// };
 
-    changeFeature("city", 0);
-
-    function openNav() {
-        get("theSidebar").style.width = "400px";
-        get("main").style.marginLeft = "400px";
+    function openSidebar() {
+        get("theSidebar").style.width = "500px";
+        get("main").style.marginLeft = "500px";
+        get("hamburger").style.display = "none";
     }
 
-    function closeNav() {
+    function closeSidebar() {
         get("theSidebar").style.width = "0";
         get("main").style.marginLeft= "0";
+        get("hamburger").style.display = "block";
     }
 
 
@@ -207,50 +217,80 @@ function clickButton(n) {
 	    if (e.keyCode === 39) { // right key = next image in slideshow
 	        // console.log("right key pressed");
 	        e.preventDefault(); // supress side-scrolling
-	        featureIndex += 1
-	        // console.log("currentMode inside next is: " + currentMode + " Its type is " + typeof currentMode)
-	        changeFeature(currentMode, featureIndex);
+	        FEATURE_INDEX += 1;
+	        // console.log("MODE inside next is: " + MODE + " Its type is " + typeof MODE)
+	        changeFeature(1);
 	    } else if (e.keyCode === 37) { // left key = previous image in slideshow
 	        e.preventDefault(); // supress side-scrolling
-	        changeFeature(currentMode, featureIndex -= 1);
-	    } else if (e.keyCode === 83) {
+	        changeFeature(-1);
+	    } else if (e.keyCode === 83) { // s
 	    	e.preventDefault();
 	    	if (get("theSidebar").style.width === "0px") {
-                openNav()
+                openSidebar();
 	    	} else {
-	    		closeNav()
+	    		closeSidebar();
 	    	}
 	    }
-	}
+	};
 	document.addEventListener('keydown', control); 
 
-	openNav(); // testing purposes; remove later
+	openSidebar(); // testing purposes; remove later
 
-    function populateSidebar(mode, featureName) {
+    function populateSidebar(mode) {
     	// console.log("populating with" + mode)
-        let data = modes[mode].data.features
+        let data = MODES[mode].data.features
+        let featureName = MODES[mode].featureName
         let entries = get("sidebar-" + mode)
         for (i = 0; i < data.length; i++) {
             let child = document.createElement("li")
             let displayName = data[i].properties[featureName]
-            // console.log(mode)
-            child.innerHTML = `<a href="javascript:void(0)" onclick="changeFeature('${mode}', ${i})">${displayName}</a>`
-            // `<a href="javascript:void(0)" 
-            //                     onclick="index(${i})">${place}</button>`            
-            // console.log(child)
+            child.innerHTML = `<a href="javascript:void(0)" id="${mode}-${i}" onclick="changeFeature(0, '${mode}', ${i})">${displayName}</a>`
             entries.append(child)
         }
     }
 
-    for (m of modeList) {
-    	// console.log(m)
-    	populateSidebar(m, modes[m].featureName)
-    }
+    for (m in MODE_LIST) {
+    	populateSidebar( MODE_LIST[m] )
+    };
+
+    changeFeature(0, "city", 0);
+
+
+	function toggleFullScreen() {
+	  if (!document.fullscreenElement) {
+	      document.documentElement.requestFullscreen();
+	      get("fullscreen-icon").classList.remove("fa-expand");
+	      get("fullscreen-icon").classList.add("fa-compress");
+	      // document.querySelector(".fullscreen").src = "ASSETS/fullscreen_exit_FILL0_wght400_GRAD0_opsz48.svg"
+	  } else {
+	    if (document.exitFullscreen) {
+	      document.exitFullscreen();
+	      get("fullscreen-icon").classList.remove("fa-compress")
+	      get("fullscreen-icon").classList.add("fa-expand")
+	      // document.querySelector(".fullscreen").src = "ASSETS/fullscreen_FILL0_wght400_GRAD0_opsz48.svg"
+	    }
+	  }
+	}    
 
 
 </script>
-
-
-
 </body>
 </html>
+
+<!-- 
+get("details-city").hasAttribute("open")
+get("details-city").open = true; -->
+
+<!-- 
+	// function changeMode(MODE, i=0) {
+ //        // mode = m;
+ //        features = modes[MODE]["data"].features; // `streets` in dcm_streets_brooklyn_2023_02.js
+ //        changeFeature(i)
+	// 	const menu = document.getElementsByClassName("menu")
+	// 	Array.prototype.map.call(menu, function(e) {
+ // 			e.style.color="whitesmoke";
+	// 		e.style.fontWeight="normal";}
+	// 		)
+ //        get(MODE).style.color = "red";
+ //        get("state").innerHTML = mode.toUpperCase();
+	// }; -->
