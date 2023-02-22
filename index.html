@@ -56,8 +56,9 @@
 	            <ul id="navbar-left">
 	                <li><a href="javascript:void(0)" class="menu" onclick="openSidebar()">
 	                	<i class="fa-solid fa-bars" id="hamburger"></i></a></li>
+	                <li id="page"></li>
 	                <!-- NEW YORK STATE -->
-	                <li><a href="javascript:void(0)" id="state"></a></li>
+	                <!-- <li><a href="javascript:void(0)" id="state"></a></li> -->
 <!-- 	                <li><a href="javascript:void(0)" class="menu" id="city" onclick="changeFeature('city')">CITY</a></li>
 	                <li><a href="javascript:void(0)" class="menu" id="boro" onclick="changeFeature('boro')">BOROS</a></li>
 	                <li><a href="javascript:void(0)" class="menu" id="hood" onclick="changeFeature('hood')">HOODS</a></li>
@@ -183,6 +184,7 @@
 	    }
         
         get( MODE.toLowerCase() + "-" + FEATURE_INDEX.toString() ).style.color = "red"; // Highlights index entry as "visited"
+        get("page").innerHTML = (FEATURE_INDEX+1).toString();
 
         let featureName = MODES[MODE]["featureName"];
         get("feature-name").innerHTML = FEATURE.properties[featureName]; 
@@ -217,7 +219,6 @@
 	    if (e.keyCode === 39) { // right key = next image in slideshow
 	        // console.log("right key pressed");
 	        e.preventDefault(); // supress side-scrolling
-	        FEATURE_INDEX += 1;
 	        // console.log("MODE inside next is: " + MODE + " Its type is " + typeof MODE)
 	        changeFeature(1);
 	    } else if (e.keyCode === 37) { // left key = previous image in slideshow
