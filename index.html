@@ -56,7 +56,13 @@
 	            <ul id="navbar-left">
 	                <li><a href="javascript:void(0)" class="menu" onclick="openSidebar()">
 	                	<i class="fa-solid fa-bars" id="hamburger"></i></a></li>
-	                <li id="page"></li>
+	                <div id="pagination">
+		                <li id="mode"></li>
+		                <li id="page"></li>
+		                <li>/</li>
+		                <li id="feature-total"></li>
+		            </div>
+
 	                <!-- NEW YORK STATE -->
 	                <!-- <li><a href="javascript:void(0)" id="state"></a></li> -->
 <!-- 	                <li><a href="javascript:void(0)" class="menu" id="city" onclick="changeFeature('city')">CITY</a></li>
@@ -112,10 +118,10 @@
 
 
     // --------------------------------  GLOBALS   -------------------------------- //
-	let MODES = {"city": {"data": city, "featureName": "name"},
-	             "boroughs": {"data": boroughs, "featureName": "boro_name"},
-	             "neighborhoods": {"data": neighborhoods, "featureName": "Name"},
-                 "streets": {"data": streets, "featureName": "Street_NM"}};
+	let MODES = {"city": {"data": city, "featureName": "name", "featureCount": city.features.length},
+	             "boroughs": {"data": boroughs, "featureName": "boro_name", "featureCount": boroughs.features.length},
+	             "neighborhoods": {"data": neighborhoods, "featureName": "Name", "featureCount": neighborhoods.features.length},
+                 "streets": {"data": streets, "featureName": "Street_NM", "featureCount": streets.features.length}};
 
     let MODE_LIST = Object.keys(MODES)
 	let MODE = "city"; // Default, starting mode
@@ -146,6 +152,8 @@
 
         if ( mode != "") {
         	MODE = mode;
+			get("mode").innerHTML = mode.toUpperCase();
+			get("feature-total").innerHTML = MODES[mode]["featureCount"].toString();        	
         }
 
 
@@ -161,6 +169,8 @@
         if (FEATURE_INDEX === -1) { // The user has been pressing the back button or back arrow
         	if (MODE_LIST.indexOf(MODE) != 0) {
                 MODE = MODE_LIST[ MODE_LIST.indexOf(MODE) - 1 ]
+				get("mode").innerHTML = mode.toUpperCase();
+				get("feature-total").innerHTML = MODES[mode]["featureCount"].toString();
         	} else {
                 MODE = MODE_LIST[0]
         	}
@@ -175,6 +185,8 @@
 	    	if (MODE_LIST.indexOf(MODE) != (MODE_LIST.length - 1)) {
                 MODE = MODE_LIST[ MODE_LIST.indexOf(MODE) + 1 ];  // next mode
                 FEATURE_INDEX = 0;
+				get("mode").innerHTML = MODE.toUpperCase();
+				get("feature-total").innerHTML = MODES[MODE]["featureCount"].toString();
                 changeFeature(0, MODE, FEATURE_INDEX)
                 return
 	    	} else {
