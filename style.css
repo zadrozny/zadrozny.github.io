@@ -76,6 +76,14 @@ nav {
 }
 
 
+#pagination {
+    display: flex;
+}
+
+#mode {
+    color: red;
+}
+
 @media (orientation: portrait) {
     nav {
         font-size: 1em;
