@@ -23,23 +23,23 @@
 	<div id="theSidebar" class="sidebar">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">×</a>
 
-			<details id="details-city">
-			<summary><a href="javascript:void(0)" class="menu" id="city" onclick="changeFeature(0, 'city', 0)">NEW YORK CITY</a></summary>
+			<details id="details-city" onclick="toggleDetails('details-city')">
+			<summary><a href="javascript:void(0)" class="menu" onclick="changeFeature(0, 'city', 0)">NEW YORK CITY</a></summary>
                 <ul id="sidebar-city"></ul>
 			</details>
 
-            <details id="details-boroughs">
-            <summary><a href="javascript:void(0)" class="menu" id="boroughs" onclick="changeFeature(0, 'boroughs', 0)">BOROUGHS</a></summary>
+            <details id="details-boroughs" onclick="toggleDetails('details-boroughs')">
+            <summary><a href="javascript:void(0)" class="menu" onclick="changeFeature(0, 'boroughs', 0)">BOROUGHS</a></summary>
                 <ul id="sidebar-boroughs"></ul>
 			</details>
 
-			<details id="details-neighborhoods">
-				<summary><a href="javascript:void(0)" class="menu" id="neighborhoods" onclick="changeFeature(0, 'neighborhoods', 0)">NEIGHBORHOODS</a></summary>
+			<details id="details-neighborhoods"  onclick="toggleDetails('details-neighborhoods')">
+				<summary><a href="javascript:void(0)" class="menu" onclick="changeFeature(0, 'neighborhoods', 0)">NEIGHBORHOODS</a></summary>
 				<ul id="sidebar-neighborhoods"></ul>
 			</details>
 
-			<details id="details-streets">
-				<summary><a href="javascript:void(0)" class="menu" id="streets" onclick="changeFeature(0, 'streets', 0)">STREETS</a></summary>
+			<details id="details-streets"  onclick="toggleDetails('details-streets')">
+				<summary><a href="javascript:void(0)" class="menu" onclick="changeFeature(0, 'streets', 0)">STREETS</a></summary>
 				<ul id="sidebar-streets"></ul>
 			</details>
 
@@ -213,8 +213,8 @@
 
 
     function openSidebar() {
-        get("theSidebar").style.width = "500px";
-        get("main").style.marginLeft = "500px";
+        get("theSidebar").style.width = "450px";
+        get("main").style.marginLeft = "450px";
         get("hamburger").style.display = "none";
     }
 
@@ -285,14 +285,18 @@
 	  }
 	}    
 
+	function toggleDetails(header){
+	    if (get(header).open === false) {
+            get(header).open = true;
+        } else {
+            get(header).open = false;
+        }
+    }
 
 </script>
 </body>
 </html>
 
-<!-- 
-get("details-city").hasAttribute("open")
-get("details-city").open = true; -->
 
 <!-- 
 	// function changeMode(MODE, i=0) {
