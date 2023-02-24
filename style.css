@@ -64,6 +64,15 @@ nav {
 }
 
 
+#mode {
+    padding-right: 1em;
+}
+
+
+#page, #feature-total {
+    padding: 0 0.5em 0 0.5em;
+}
+
 .btn-group {
     z-index: 1001;
     position: absolute; 
@@ -97,16 +106,26 @@ nav {
 
 @media (orientation: portrait) {
     nav {
-        font-size: 1em;
-        height: 5vh;
+        font-size: 1.5em;
+        height: 10vh;    
     }
 
     #mapid {
-        height: 95vh;
+        /*height: 95vh;*/
     }
 
     .sidebar .closebtn {
         padding-top: 2px;
+    }
+
+    #feature-name {
+        font-size: 2em;
+    }
+
+    #allbus {
+        font-size: 2em;
+        margin: 20px;
+        padding: 20px;
     }
 }
 
