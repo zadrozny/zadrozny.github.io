@@ -43,6 +43,11 @@
 				<ul id="sidebar-streets"></ul>
 			</details>
 
+			<details class="menu" id="details-garmin">
+				<summary onclick="changeFeature(0, 'garmin', 0)">GARMIN</a></summary>
+				<ul id="sidebar-garmin"></ul>
+			</details>			
+
 <!-- 		<ul>
             <li><a href="javascript:void(0)" class="menu" id="boroughs" onclick="changeFeature('boroughs')">BOROUGHS</a></li>
             <li><a href="javascript:void(0)" class="menu" id="neighborhoods" onclick="changeFeature('neighborhoods')">NEIGHBORHOODS</a></li>
@@ -71,6 +76,7 @@
 					<!-- THE OTHER ISLANDS OF NYC  -->
 					<!-- DONATE -->
 					<!-- ABOUT -->
+					<!-- PATHS / ROUTES -->
 	            </ul>
 	            <ul id="navbar-right">
 	                <li><a href="javascript:void(0)" id="menu-screen" onclick="toggleFullScreen()"><span class="tooltiptext"><i id="fullscreen-icon" class="fa-solid fa-expand"></i></span></a></li>
@@ -96,28 +102,67 @@
     <script type="text/javascript" src="data/data_boroughs.js"></script>
     <script type="text/javascript" src="data/data_neighborhoods.js"></script>
     <script type="text/javascript" src="data/data_streets.js"></script>
+    <script type="text/javascript" src="data/garmin_traces.js"></script>
 
 
     <script>
 
 	let NYCMAP = L.map('mapid').setView([40.66, -73.95], 16);
 
-	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		maxZoom: 18,
-		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		id: 'mapbox/streets-v11',
-		tileSize: 512,
-		zoomOffset: -1
-	}).addTo(NYCMAP);
+	// L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+	// 	maxZoom: 18,
+	// 	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+	// 		'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+	// 		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+	// 	id: 'mapbox/streets-v11',
+	// 	tileSize: 512,
+	// 	zoomOffset: -1
+	// }).addTo(NYCMAP);
+
+
+       L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(NYCMAP);
+       
+
+	// --------------------------------  LOCATION   -------------------------------- //
+
+	// https://gis.stackexchange.com/a/383911/118877
+	// NYCMAP.locate({setView: true})
+ //        .on('locationerror', function(e){
+ //            console.log(e);
+ //            alert("Location access has been denied.");
+ //        });
+
+
+	// function onLocationFound(e) {
+	//     var radius = e.accuracy;
+
+	//     L.marker(e.latlng).addTo(NYCMAP)
+	//         .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+	//     L.circle(e.latlng, radius).addTo(NYCMAP);
+	// }
+
+	// NYCMAP.on('locationfound', onLocationFound);
+
+	// function onLocationError(e) {
+	//     alert(e.message);
+	// }
+
+	// NYCMAP.on('locationerror', onLocationError);
+
+	// // -------------------------------  ! LOCATION   ------------------------------- //
 
 
     // --------------------------------  GLOBALS   -------------------------------- //
 	let MODES = {"city": {"data": city, "featureName": "name", "featureCount": city.features.length},
 	             "boroughs": {"data": boroughs, "featureName": "boro_name", "featureCount": boroughs.features.length},
 	             "neighborhoods": {"data": neighborhoods, "featureName": "Name", "featureCount": neighborhoods.features.length},
-                 "streets": {"data": streets, "featureName": "Street_NM", "featureCount": streets.features.length}};
+                 "streets": {"data": streets, "featureName": "Street_NM", "featureCount": streets.features.length},
+                 "garmin": {"data": activities, "featureName": "date", "featureCount": activities.features.length}
+             };
 
     let MODE_LIST = Object.keys(MODES)
 	let MODE = "city"; // Default, starting mode
