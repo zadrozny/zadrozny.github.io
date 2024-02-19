@@ -1,3 +1,6 @@
 [submodule "opus"]
 	path = opus
 	url = https://github.com/zadrozny/opus
+[submodule "sketches"]
+	path = sketches
+	url = https://github.com/zadrozny/sketches
