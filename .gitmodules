@@ -1,6 +1,3 @@
 [submodule "nyc"]
 	path = nyc
 	url = https://github.com/zadrozny/nyc
-[submodule "sketches"]
-	path = sketches
-	url = https://github.com/zadrozny/sketches
